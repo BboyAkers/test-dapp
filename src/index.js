@@ -113,10 +113,10 @@ const initialize = async () => {
     getAccountsButton.onclick = async () => {
       try {
         const _accounts = await ethereum.request({ method: 'eth_accounts' })
-        getAccountsResults.innerHTML = _accounts[0] || 'Not able to get accounts'
+        getAccountsResults.appendChild(document.createTextNode(`${_accounts[0] || 'Not able to get accounts'}`))
       } catch (err) {
         console.error(err)
-        getAccountsResults.innerHTML = `Error: ${err.message}`
+        getAccountsResults.appendChild(document.createTextNode(`Error: ${err.message}`))
       }
     }
   }
@@ -132,7 +132,7 @@ const initialize = async () => {
 
   function handleNewAccounts (newAccounts) {
     accounts = newAccounts
-    accountsDiv.innerHTML = accounts
+    accountsDiv.appendChild(document.createTextNode(accounts))
     if (isMetaMaskConnected()) {
       initializeAccountButtons()
     }
@@ -140,10 +140,10 @@ const initialize = async () => {
   }
 
   function handleNewChain (chainId) {
-    chainIdDiv.innerHTML = chainId
+    chainIdDiv.appendChild(document.createTextNode(chainId))
   }
   function handleNewNetwork (networkId) {
-    networkDiv.innerHTML = networkId
+    networkDiv.appendChild(document.createTextNode(networkId))
   }
 
   async function getNetworkAndChainId () {
@@ -151,10 +151,11 @@ const initialize = async () => {
       const chainId = await ethereum.request({
         method: 'eth_chainId',
       })
-      handleNewChain(chainId)
       const networkId = await ethereum.request({
         method: 'net_version',
       })
+
+      handleNewChain(chainId)
       handleNewNetwork(networkId)
     } catch (err) {
       console.error(err)
