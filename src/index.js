@@ -142,6 +142,9 @@ const initialize = async () => {
   function handleNewChain (chainId) {
     chainIdDiv.innerHTML = chainId
   }
+  function handleNewNetwork (networkId) {
+    networkDiv.innerHTML = networkId
+  }
 
   async function getNetworkAndChainId () {
     try {
@@ -149,6 +152,10 @@ const initialize = async () => {
         method: 'eth_chainId',
       })
       handleNewChain(chainId)
+      const networkId = await ethereum.request({
+        method: 'net_version',
+      })
+      handleNewNetwork(networkId)
     } catch (err) {
       console.error(err)
     }
@@ -160,7 +167,7 @@ const initialize = async () => {
 
     ethereum.autoRefreshOnNetworkChange = false
     getNetworkAndChainId()
-
+    ethereum.on('networkChanged', handleNewNetwork)
     ethereum.on('chainChanged', handleNewChain)
     ethereum.on('accountsChanged', handleNewAccounts)
 
